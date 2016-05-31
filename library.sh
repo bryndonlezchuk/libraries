@@ -126,6 +126,7 @@ yesnoquit () {
 	while true
 	do
 		message "$1 (yes/no/quit)"
+		local INPUT
 		read INPUT
 
 		case $INPUT in
@@ -169,15 +170,15 @@ debugout () {
 }
 
 getipaddr () {
-	DEVICE="$1"
+	local DEVICE="$1"
 	#one liner to pull the IP off of the given device interface
 	ifconfig "$DEVICE" | egrep -o "(([01]?[[:digit:]]?[[:digit:]]|2[0-4][[:digit:]]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])" | head -n 1
 }
 
 sedreplace () {
-	OLD="$1"
-	NEW="$2"
-	FILE="$3"
+	local OLD="$1"
+	local NEW="$2"
+	local FILE="$3"
 	sed -i "s/$OLD/$NEW/g" "$FILE"
 }
 
