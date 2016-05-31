@@ -185,9 +185,9 @@ verifyipv4 () {
 	local IP="$1"
 	if echo "$IP" | egrep -o "(([01]?[[:digit:]]?[[:digit:]]|2[0-4][[:digit:]]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])"
 	then
-		return true
+		return 0
 	else
-		return false
+		return 1
 	fi
 }
 
@@ -200,4 +200,27 @@ makedir () {
 		verbout "$DIR already exists"
 		debugout "$DIR already exists"
 	fi
+}
+
+gettimestamp () {
+        local FILE="$1"
+        local OPT="$2"
+        local DATE="$(date +%D -r $FILE)"
+
+        if [[ -z "$OPT" ]]
+        then
+                echo $DATE
+        else
+                #Get day/month/year
+                local MONTH=${DATE%%/*}
+                local REM=${DATE#*/}
+                local DAY=${REM%%/*}
+                local YEAR=${REM#*/}
+
+                case "$OPT" in
+                        day)    echo $DAY;;
+                        month)  echo $MONTH;;
+                        year)   echo $YEAR;;
+                esac
+        fi
 }
