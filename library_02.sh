@@ -92,32 +92,50 @@ getargs () {
 
 
 
-
-
-
-
+#Creates temporary directories and adds them to the global array TMPDIR
+#	$1 (optional) is the amount of directories to create
 mktempdir () {
-	#need code to handle adding to already existing array
+	#need code to handle adding to already existing array - needs testing
 	#add custom dir naming?
 
 	local ARG="$1"
-	if [[ "$ARG" =~ ^[[:digit:]]+$ &&  "$ARG" -gt 0 ]]
+
+	if [[ -z "$ARG" ]]
+	#create single directory if no arg given
+	then
+		TMPDIR[${#TMPDIR[@]}]="$(mktemp -d)"
+
+	elif [[ "$ARG" =~ ^[[:digit:]]+$ &&  "$ARG" -gt 0 ]]
+	#create the given amount of directories
 	then
 		for ((i=${#TMPDIR[@]}; i<$ARG+${#TMPDIR[@]}; i++))
 		do
 			TMPDIR[$i]="$(mktemp -d)"
 			verbout "TMPDIR[$i]=${TMPDIR[$i]}" "green"
 		done
+
+	else
+		errormessage "Invalid amount of directories to create"
+		cleanup
 	fi
 }
 
+#Creates temporary files and adds them to the global array TMPFILE
+#	$1 (optional) is the amount of files to create
 mktempfile () {
-	#need code to handle adding to already existing array
+	#need code to handle adding to already existing array - needs testing
 	#add custom file naming?
 
 	local ARG="$1"
-	if [[ "$ARG" =~ ^[[:digit:]]+$ && "$ARG" -gt 0 ]]
-		then
+
+	if [[ -z "$ARG" ]]
+	#create single file if no arg given
+	then
+		TMPFILE[${#TMPFILE[@]}]="$(mktemp -d)"
+
+	elif [[ "$ARG" =~ ^[[:digit:]]+$ && "$ARG" -gt 0 ]]
+	#creat the given amount of files
+	then
 		for ((i=${#TMPFILE[@]}; i<$ARG+${#TMPFILE[@]}; i++))
 		do
 			TMPFILE[$i]=$(mktemp)
